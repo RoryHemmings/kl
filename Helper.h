@@ -8,6 +8,11 @@
 #include <sstream>
 #include <fstream>
 
+/**
+ * TODO potentially relocate most of this code
+ * TODO reorganize into definitions and declarations
+ */
+
 namespace Helper
 {
 	template <class T>

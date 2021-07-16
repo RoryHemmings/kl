@@ -11,6 +11,10 @@
 #include "Helper.h"
 #include "Base64.h"
 
+/**
+ * TODO reorganize this header file into declarations and definitions
+ */
+
 namespace IO
 {
 	std::string GetPath(const bool append_seperator=false)

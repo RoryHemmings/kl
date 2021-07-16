@@ -14,6 +14,10 @@
 
 #define SCRIPT_NAME "sm.ps1"
 
+/**
+ * TODO look over this class and potentially reorganize
+ */
+
 namespace Mail
 {
 
