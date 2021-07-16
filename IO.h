@@ -67,6 +67,18 @@ namespace IO
 			return "";
 		}
 	}
+
+	std::vector<std::string> GetAttatchments(const std::string &path)
+	{
+		std::vector<std::string> ret;
+		for (const auto &entry : std::filesystem::directory_iterator(path))
+		{
+			std::cout << entry.path() << std::endl;
+			ret.push_back(Helper::ToString(entry.path()));
+		}
+
+		return ret;
+	}
 }
 
 #endif

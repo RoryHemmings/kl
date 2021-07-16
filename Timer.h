@@ -7,6 +7,10 @@
 #include <chrono>
 #include <functional>
 
+/**
+ * TODO This class needs to be reorganized into two files
+ * TODO The constructor also needs to be fixed to initialize private variables
+ */
 class Timer
 {
 

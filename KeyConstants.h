@@ -6,24 +6,17 @@
 #include <map>
 #include <string>
 
-class KeyPair
+struct KeyPair
 {
-	public:
-		KeyPair(const std::string& vk="", const std::string& name="") : VKName(vk), Name(name) { }
+	// TODO try compiling without this line
+	KeyPair(const std::string& vk="", const std::string& name="") : VKName(vk), Name(name) { }
 
-		std::string VKName;
-		std::string Name;
-
-};
-
-class Keys
-{
-	public:
-		static std::map<int, KeyPair> KEYS;
+	std::string VKName;
+	std::string Name;
 };
 
 // Pairs have form {code, {vk, name}}, internal object initializes a KeyPair
-std::map<int, KeyPair> Keys::KEYS = {
+std::map<int, KeyPair> KEYS = {
 	{0xC1, {"[VK_ABNT_C1]", "[Abnt C1]"}},
 	{0xC2, {"[VK_ABNT_C2]", "[Abnt C2]"}},
 	{0x6B, {"[VK_ADD]", "[Numpad +]"}},
@@ -96,7 +89,7 @@ std::map<int, KeyPair> Keys::KEYS = {
 	{0xDC, {"[VK_OEM_5]", "[OEM_5 (| \\)]"}},
 	{0xDD, {"[VK_OEM_6]", "[OEM_6 (} ])]"}},
 	{0xDE, {"[VK_OEM_7]", "[OEM_7 (\" ')]"}},
-	{0xDF, {"[VK_OEM_8]", "[OEM_8 (§ !)]"}},
+	{0xDF, {"[VK_OEM_8]", "[OEM_8 (ï¿½ !)]"}},
 	{0xF0, {"[VK_OEM_ATTN]", "[Oem Attn]"}},
 	{0xF3, {"[VK_OEM_AUTO]", "[Auto]"}},
 	{0xE1, {"[VK_OEM_AX]", "[Ax]"}},
