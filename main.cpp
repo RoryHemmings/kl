@@ -2,6 +2,8 @@
 #include <filesystem>
 #include <windows.h>
 
+#include "Settings.h"
+
 #include "Helper.h"
 #include "KeyConstants.h"
 #include "Base64.h"
@@ -9,8 +11,6 @@
 #include "Timer.h"
 #include "SendMail.h"
 #include "KeyboardManager.h"
-
-#define FREQUENCY_MINUTES 0.2
 
 using namespace std;
 

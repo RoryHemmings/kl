@@ -1,7 +1,5 @@
 #include "Helper.h"
-#include "Base64.h"
 
-// Gets path of keylog folder
 std::string IO::GetOutputPath(const bool append_seperator)
 {
 	std::string dir(getenv("APPDATA"));
@@ -9,18 +7,12 @@ std::string IO::GetOutputPath(const bool append_seperator)
 	return full + (append_seperator ? "\\" : "");
 }
 
-// Creates new directory wihout checking for subdirectories
-bool IO::MkOneDir(const std::string &path)
+// Creates single directory, without checking for subdirectories
+bool MkOneDir(const std::string &path)
 {
 	return (bool)CreateDirectory(path.c_str(), NULL) || GetLastError() == ERROR_ALREADY_EXISTS;
 }
 
-/**
- * Creates new directory
- * The reason it is weird is because it
- * generates all subdirectories defined
- * in a path without throwing an error
- **/
 bool IO::MKDir(std::string path)
 {
 	for (char &c : path)
@@ -36,10 +28,6 @@ bool IO::MKDir(std::string path)
 	return true;
 }
 
-/**
- * Writes to new keylog file
- * Returns empty string if file failed to open
- **/
 template <class T>
 std::string IO::WriteLog(const T &t)
 {
@@ -70,7 +58,6 @@ std::string IO::WriteLog(const T &t)
 	}
 }
 
-// Gets all attatchments in output folder
 std::vector<std::string> IO::GetAttatchments(const std::string &path)
 {
 	std::vector<std::string> ret;
@@ -82,3 +69,16 @@ std::vector<std::string> IO::GetAttatchments(const std::string &path)
 
 	return ret;
 }
+
+#if DEBUG == true
+
+	void IO::WriteAppLog(const std::string &s)
+	{
+		std::ofstream outfile("AppLog.txt", std::ios::app);
+		outfile << "[" << Helper::DateTime().GetDateTimeString() << "]"
+						<< "\n"
+						<< s << std::endl
+						<< "\n";
+	}
+
+#endif
