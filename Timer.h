@@ -90,11 +90,17 @@ private:
 	void ThreadFunc()
 	{
 		if (CallNumber == Infinite)
+		{
+			// Runs until .Stop() is called
 			while (Active)
 				SleepAndRun();
+		}
 		else
+		{
+			// Runs until repeat count becomes negative
 			while (repeat_count--)
 				SleepAndRun();
+		}
 	}
 };
 

