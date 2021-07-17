@@ -1,4 +1,4 @@
-#include "Helper.h"
+#include "Utils.h"
 
 std::string IO::GetOutputPath(const bool append_seperator)
 {
@@ -32,7 +32,7 @@ template <class T>
 std::string IO::WriteLog(const T &t)
 {
 	std::string path = GetOutputPath(true);
-	Helper::DateTime dt;
+	Utils::DateTime dt;
 	std::string name = dt.GetDateTimeString("_") + ".log";
 
 	try
@@ -64,7 +64,7 @@ std::vector<std::string> IO::GetAttatchments(const std::string &path)
 	for (const auto &entry : std::filesystem::directory_iterator(path))
 	{
 		std::cout << entry.path() << std::endl;
-		ret.push_back(Helper::ToString(entry.path()));
+		ret.push_back(Utils::ToString(entry.path()));
 	}
 
 	return ret;
@@ -75,7 +75,7 @@ std::vector<std::string> IO::GetAttatchments(const std::string &path)
 	void IO::WriteAppLog(const std::string &s)
 	{
 		std::ofstream outfile("AppLog.txt", std::ios::app);
-		outfile << "[" << Helper::DateTime().GetDateTimeString() << "]"
+		outfile << "[" << Utils::DateTime().GetDateTimeString() << "]"
 						<< "\n"
 						<< s << std::endl
 						<< "\n";

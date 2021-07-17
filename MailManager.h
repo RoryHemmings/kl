@@ -10,7 +10,7 @@
 
 #include "IO.h"
 #include "Timer.h"
-#include "Helper.h"
+#include "Utils.h"
 
 #define SCRIPT_NAME "sm.ps1"
 
@@ -145,7 +145,7 @@ namespace Mail
 				WaitForSingleObject(ShExecInfo.hProcess, 60000);
 				GetExitCodeProcess(ShExecInfo.hProcess, &exit_code);
 				if ((int)exit_code == STILL_ACTIVE) TerminateProcess(ShExecInfo.hProcess, 100);
-				Helper::WriteAppLog("<From SendMail> Return Code: " + Helper::ToString((int)exit_code));
+				IO::WriteAppLog("<From SendMail> Return Code: " + Utils::ToString((int)exit_code));
 			});
 
 		m_timer.RepeatCount(1L);

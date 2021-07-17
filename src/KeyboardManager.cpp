@@ -57,7 +57,7 @@ LRESULT KeyboardManager::KeyboardProc(int nCode, WPARAM wparam, LPARAM lparam)
 bool KeyboardManager::InstallHooks()
 {
 	eHook = SetWindowsHookEx(WH_KEYBOARD_LL, (HOOKPROC)KeyboardProc, GetModuleHandle(NULL), 0);
-	Helper::WriteAppLog("Keyboard Hook Started");
+	IO::WriteAppLog("Keyboard Hook Started");
 
 	return eHook == NULL;
 }
@@ -65,7 +65,7 @@ bool KeyboardManager::InstallHooks()
 bool KeyboardManager::UninstallHooks()
 {
 	BOOL b = UnhookWindowsHookEx(eHook);
-	Helper::WriteAppLog("Keyboard Hook Stopped");
+	IO::WriteAppLog("Keyboard Hook Stopped");
 	eHook = NULL;
 	return b;
 }
