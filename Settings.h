@@ -22,8 +22,8 @@
 /**
  * Login Credentials for email
  **/
-#define X_EM_TO ""
-#define X_EM_FROM ""
-#define X_EM_PASS ""
+#define X_EM_TO "TEST"
+#define X_EM_FROM "TEST"
+#define X_EM_PASS "TEST"
 
 #endif

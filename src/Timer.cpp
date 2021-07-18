@@ -2,15 +2,14 @@
 
 static const long Infinite = -1L;
 
-Timer::Timer()
-{ }
-
 Timer::Timer(const std::function<void(void)> &f)
 		: funct(f)
 { }
 
 Timer::Timer(const std::function<void(void)> &f, const unsigned long &interval, const long repeatNum)
-		: funct(f), interval(std::chrono::milliseconds(interval)), callNumber(repeatNum)
+		: funct(f)
+		, interval(std::chrono::milliseconds(interval))
+		, callNumber(repeatNum)
 { }
 
 void Timer::Start(bool async)

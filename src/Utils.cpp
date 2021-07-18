@@ -1,14 +1,5 @@
 #include "Utils.h"
 
-template <class T>
-std::string Utils::ToString(const T &s)
-{
-	std::ostringstream out;
-	out << s;
-
-	return out.str();
-}
-
 Utils::DateTime::DateTime()
 {
 	time_t ms;
@@ -31,7 +22,7 @@ Utils::DateTime::DateTime(int D, int m, int y)
 Utils::DateTime::DateTime(int D, int m, int y, int H, int M, int S)
 		: D(D), m(m), y(y), H(H), M(M), S(S) {}
 
-Utils::DateTime::DateTime Utils::DateTime::Now()
+Utils::DateTime Utils::DateTime::Now()
 {
 	return Utils::DateTime();
 }

