@@ -168,7 +168,7 @@ int MailUtils::SendMail(const std::string &subject, const std::string &body, con
 											});
 
 	// Run shell termination function asynchronously
-	m_timer.RepeatCount(1L);
+	m_timer.SetRepeatCount(1L);
 	m_timer.SetInterval(10L);
 	m_timer.Start(true);
 

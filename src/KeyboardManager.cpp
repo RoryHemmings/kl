@@ -12,8 +12,6 @@
 #include "KeyboardManager.h"
 
 KeyboardManager::KeyboardManager()
-	: eHook(NULL)
-	, keylog("")
 { }
 
 LRESULT KeyboardManager::KeyboardProc(int nCode, WPARAM wparam, LPARAM lparam)

