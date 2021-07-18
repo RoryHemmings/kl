@@ -20,6 +20,8 @@ public:
 	/**
 	 * Starts running task specified amout of times
 	 * every "interval" often 
+	 * 
+	 * Runs asynchronously if true is passed as arg
 	 **/
 	void Start(bool async=true);
 	void Stop();
@@ -58,9 +60,8 @@ private:
 	std::function<void(void)> funct = nullptr;
 
 	/**
-	 * Runs funct and waits until interval
-	 * is reached. This repeats until repeatCount
-	 * becomes 0
+	 * Waits until interval is reached and then runs
+	 * funct. This repeats until repeatCount becomes 0
 	 **/
 	void SleepAndRun();
 

