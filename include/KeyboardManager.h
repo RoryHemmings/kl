@@ -19,7 +19,7 @@ public:
 		static KeyboardManager* instance = new KeyboardManager();
 		return *instance;
 	}
-;
+
 	// Begins logging keystrokes
 	bool InstallHooks();
 
