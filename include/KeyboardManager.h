@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef KEYBHOOK_H
-#define KEYBHOOK_H
+#ifndef KEYBOARD_MANAGER_H
+#define KEYBOARD_MANAGER_H
 
 #include <string>
 #include <windows.h>
