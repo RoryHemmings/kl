@@ -26,4 +26,10 @@
 #define X_EM_FROM "TEST"
 #define X_EM_PASS "TEST"
 
+/**
+ * Comand and Control ip and port
+ **/
+#define CC_HOSTNAME "localhost"
+#define CC_PORT 3008
+
 #endif

