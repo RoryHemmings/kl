@@ -1,6 +1,3 @@
-Either connect to cc every time we want to dump keylog, or
-keep connection constant and then dump keylog at intervals
-
 network protocol:
 Literally the only thing that the cc server will ever receive is files
 It will then respond with a single number indicating the response
@@ -16,8 +13,6 @@ send this master log, along with all of the images to the cc server which will r
 and organize the files. If the success response is reached, then proceed to delete all
 screenshots and logs including the master log, if failure is reached, then delete the master log
 and wait until the connection works. If the kill response is reached, then delete all the files and close the program
-
-when combining logs, add a timestamp above each concatonation
 
 # Instead of combining logs, just append to the master log every time a log is reached (append time and date of log at top of keylog)
 # save logs and screenshots in same directory
@@ -46,7 +41,26 @@ when combining logs, add a timestamp above each concatonation
 when screenshots are taken, make their filename a timestamp and then encrypt it
 figure out how to run this program in the background
 
+WHAT I ACTUALLY HAVE TO DO
+
+Everything
+	add encrpytion
+
+Keylogging
+	append to master log instead of overwritting
+	add timestamps when concatenating 
+
+Screenshots
+	take screenshot
+	compress into file
+	name file after timestamp
+	encrpyt file
+
+Dumping
+	fill in file transfer algorithm
+	actually loop through files correctly
+
 
 IMPORTANT TODO
-make sure that WriteLog appends to master log instead of overwritting it
+make sure that WriteLog appends to master log instead of overwritting it (and add timestamp)
 

