@@ -46,7 +46,8 @@ namespace IO
 
 		try
 		{
-			std::ofstream out(path + MASTER_LOG_NAME);
+			// Open file in append mode
+			std::ofstream out(path + MASTER_LOG_NAME, std::fstream::in | std::fstream::out | std::fstream::app);
 			if (!out)
 				return false;
 
