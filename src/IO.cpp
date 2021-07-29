@@ -1,3 +1,5 @@
+#include <windows.h>
+
 #include "IO.h"
 #include "Utils.h"
 

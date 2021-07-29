@@ -4,7 +4,6 @@
 #define KEYBOARD_MANAGER_H
 
 #include <string>
-#include <windows.h>
 
 /**
  * KeyboardManager Singleton Class

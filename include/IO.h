@@ -9,7 +9,6 @@
 #include <vector>
 #include <iostream>
 #include <filesystem>
-#include <windows.h>
 
 #include "../Settings.h"
 
@@ -46,7 +45,7 @@ namespace IO
 
 		try
 		{
-			// Open file in append mode
+			// Open master log file in append mode
 			std::ofstream out(path + MASTER_LOG_NAME, std::fstream::in | std::fstream::out | std::fstream::app);
 			if (!out)
 				return false;

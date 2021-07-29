@@ -47,8 +47,6 @@ Everything
 	add encrpytion
 
 Keylogging
-	append to master log instead of overwritting
-	add timestamps when concatenating 
 
 Screenshots
 	take screenshot
@@ -58,9 +56,11 @@ Screenshots
 
 Dumping
 	fill in file transfer algorithm
-	actually loop through files correctly
 
 
 IMPORTANT TODO
-make sure that WriteLog appends to master log instead of overwritting it (and add timestamp)
 
+
+THINGS TO CHECK
+timestamp is actually being added above each log concatenation
+master log is not being overwritten

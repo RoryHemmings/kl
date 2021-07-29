@@ -1,22 +1,22 @@
-#pragma once
-
 #ifndef SOCKET_H
 #define SOCKET_H
 
+// #undef _WINSOCKAPI_
+// #define _WINSOCKAPI_
+
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <iphlpapi.h>
+#include <stdio.h>
 #include <string>
 
-#include <WinSock2.h>
-#include <WS2tcpip.h>
-#include <stdlib.h>
-#include <stdio.h>
-
-#pragma comment (lib, "Ws2_32.lib")
+#pragma comment (lib, "ws2_32.lib")
 
 enum RESPONSE_CODE
 {
-	FAILURE: 0,
-	SUCCESS: 1,
-	KILL: 2
+	FAILURE = 0,
+	SUCCESS = 1,
+	KILL	= 2
 };
 
 /**
@@ -27,15 +27,49 @@ class Socket
 
 public:
 	/**
-	 * Initializes winsock, creates socket, and attempts
-	 * to connect to server at adress on port
+	 * Initializes Winsock
 	 */
-	Socket(const std::string& adress, int port);
+	Socket();
+
+	// Conversion constructor from SOCKET
+	Socket(SOCKET);
+
+	/**
+	 * Sends len amount of data to this socket
+	 */
+	int Send(size_t len, char* data);
+	
+	/**
+	 * Blocks until able to read len bytes from internal socket
+	 * Returns -1 on error,
+	 * 0 on socket close,
+	 * and length otherwise
+	 */
+	size_t Recv(size_t len, char* in) const;
 
 	/** 
 	 * Closes socket
 	 */
 	void Close();
+
+	bool IsActive() const { return active; }
+
+protected:
+	SOCKET sock;
+
+	bool active = false;
+
+};
+
+class ClientSocket : public Socket
+{
+
+public:
+	/**
+	 * Initializes winsock, creates socket, and attempts
+	 * to connect to server at adress on port
+	 */
+	ClientSocket(const std::string& adress, int port);
 
 	/**
 	 * Sends data using internal socket
@@ -45,18 +79,22 @@ public:
 	 */
 	RESPONSE_CODE SendFile(const std::string& path); 
 
-	bool IsActive() const { return active; }
+
 
 private:
-	WSADATA wsa_data;
-	SOCKET sock;
-	struct sockaddr_in addr_in;
-
-	bool active = false;
-
-	int send(size_t len, void* data);
 	RESPONSE_CODE recv();
-	
+
+};
+
+class ServerSocket : public Socket
+{
+
+public:
+	ServerSocket(const std::string& port);
+	Socket Accept();
+
+private:
+	std::string port;
 
 };
 

