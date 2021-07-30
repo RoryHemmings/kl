@@ -25,6 +25,9 @@ namespace Utils
 		return out.str();
 	}
 
+	void ClearBuffer(size_t len, char* buffer);
+	std::string GetFilenameFromPath(const std::string& path);
+
 	struct DateTime
 	{
 		int D, m, y, H, M, S;

@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "IO.h"
+#include "Utils.h"
 #include "Socket.h"
 
 Socket::Socket()
@@ -94,16 +95,108 @@ ClientSocket::ClientSocket(const std::string& adress, int port)
 	active = true;
 }
 
+/**
+ *   Primary Packet Structure
+ * 1 byte   uint8_t   status either, 1 or 2 (1 in this case)
+ * 4 bytes  uint32_t  total packets
+ * x bytes  cstring   filename
+ */
+size_t createPrimaryFtpPacket(uint32_t totalPackets, const std::string& filename, size_t buflen, char* out)
+{
+	Utils::ClearBuffer(buflen, out);
+
+	size_t len = 0;
+	size_t numReservedBytes = 1 + sizeof(totalPackets);
+
+	// status byte (primary packet)
+	out[0] = (uint8_t)1;
+	len += 1;
+	
+	// append totalPackets
+	memcpy(out+len, &totalPackets, sizeof(totalPackets));
+	len += sizeof(totalPackets);
+
+	// append filename (if filename is too long, it will be truncated
+	strncpy(out+len, filename.c_str(), buflen - numReservedBytes);
+	len += min(filename.size(), (size_t)buflen - numReservedBytes);
+
+	return len;
+}
+
+/**
+ * Secondary Packet Structure
+ * 1 bytes  uint_8_t status, either 1 or 2 (2 in this case)
+ * x bytes  char*    file data
+ *
+ * Make sure to shift the data over by one byte so that 
+ * there is space for the status (much faster than copying 
+ * entire buffers worth of data)
+ */
+size_t createFtpPacket(uint16_t dataLength, char* out)
+{
+	size_t len = 0;
+
+	// Status byte (secondary packet)
+	out[0] = (uint8_t)2;
+	len += 1;
+
+	// Apend dataLength
+	memcpy(out + len, &dataLength, sizeof(dataLength));
+	len += sizeof(dataLength);
+
+	// Skip data that is already in the buffer
+	len += dataLength;
+
+	return len;
+}
+
 RESPONSE_CODE ClientSocket::SendFile(const std::string& path)
 {
-	// std::ifstream infile(path, std::ios::binary);
-	Send(path.size()+1, (char*)path.c_str());
-	// Algorithm
-	// at any time, if something goes wrong then return the error
-	// that way, the error will be returned to the main handler function
-	// and the error will be handled
-	// if everything gets to the end and success is returned than that will
-	// also be appropriately handled
+	const size_t buflen = 1024;
+	char out[buflen];
+
+	// Open the file
+	std::ifstream infile(path, std::ios::binary);
+	if (!infile.is_open())
+	{
+		IO::WriteAppLog("Failed to open file " + path + " locally");
+		return FAILURE;
+	}
+
+	// Get the file size
+	infile.seekg(0, infile.end);
+	int fileSize = infile.tellg();
+	infile.seekg(0, infile.beg);
+
+	// Last packet = floor(filesize/amount per file) + 1
+	// Last packet = number of passes required in decimal without decimal + an extra
+	uint32_t totalPackets = floor(fileSize / (buflen - 3)) + 1;
+	Send(createPrimaryFtpPacket(totalPackets, Utils::GetFilenameFromPath(path), buflen, out), out);
+
+	while (!infile.eof())
+	{
+		Utils::ClearBuffer(buflen, out);
+
+		RESPONSE_CODE response = recv();
+		if (response != SUCCESS)
+			return response;
+
+		// Start at 3 to leave space for status byte and length
+		size_t i = 3;
+		while (i < buflen)
+		{
+			char c = (char)infile.get();
+			if (infile.eof())
+				break;
+
+			out[i] = c;
+			++i;
+		}
+
+		uint16_t length = i - 3;
+		Send(createFtpPacket(length, out), out);
+	}
+	
 	return SUCCESS;
 }
 

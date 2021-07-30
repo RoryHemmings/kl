@@ -7,17 +7,75 @@
 
 #define PORT
 
-int receiveFile(const Socket& target)
+int receiveFile(Socket& target)
 {
 	const size_t buflen = 1024;
-	char buffer[buflen];
-	
-	size_t len = target.Recv(buflen, buffer);
-	if (len <= 0)
-		return len;
+	char in[buflen];
 
-	std::string filename(buffer);
-	std::cout << filename << std::endl;
+	uint8_t response = FAILURE;
+	
+	size_t len = target.Recv(buflen, in);
+	if (len == 0)
+		return 0;	// Connection closed
+
+	if (in[0] != 1)
+	{
+		std::cout << "Wrong Primary Packet Type Sent" << std::endl;
+		// Wrong packet type (failed to receive file)
+		target.Send(sizeof(response), (char*)&response);
+
+		// Move to next file
+		return 1;
+	}
+
+	uint32_t index = 0, totalPackets;
+	std::string filename;
+
+	memcpy(&totalPackets, in + 1, 4);
+	filename = std::string(in + 5);
+
+	std::ofstream outfile("dump\\" + filename, std::ios::binary);
+	if (!outfile.is_open())
+	{
+		std::cout << "failed to open dump file [" << filename << "]" << std::endl;
+		
+		response = FAILURE;
+		target.Send(sizeof(response), (char*)&response);
+
+		return 1;
+	}
+
+	do
+	{
+		Utils::ClearBuffer(buflen, in);
+
+		// Give Go-ahead
+		response = SUCCESS;
+		target.Send(sizeof(response), (char*)&response);
+
+		len = target.Recv(buflen, in);
+		if (len == 0)
+			return 0;
+
+		if (in[0] != 2)
+		{
+			std::cout << "Wrong Secondary Packet Type" << std::endl;
+
+			response = FAILURE;
+			target.Send(sizeof(response), (char*)&response);
+			outfile.close();
+
+			// Continue to next file
+			return 1;
+		}
+
+		uint16_t length;
+		memcpy(&length, in + 1, 2);
+
+		outfile.write(in+3, length);
+
+		++index;
+	} while (index < totalPackets);
 
 	return 1;
 }

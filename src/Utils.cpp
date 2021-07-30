@@ -1,5 +1,23 @@
 #include "Utils.h"
 
+void Utils::ClearBuffer(size_t len, char* buffer)
+{
+	for (size_t i = 0; i < len; ++i)
+	{
+		buffer[i] = '\0';
+	}
+}
+
+std::string Utils::GetFilenameFromPath(const std::string& path)
+{
+	size_t sep = path.find_last_of("\\");
+
+	if (sep != std::string::npos)
+		return path.substr(0, sep);
+	else
+		return path;
+}
+
 Utils::DateTime::DateTime()
 {
 	time_t ms;
