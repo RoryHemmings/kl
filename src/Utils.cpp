@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "Utils.h"
 
 void Utils::ClearBuffer(size_t len, char* buffer)
@@ -13,7 +15,7 @@ std::string Utils::GetFilenameFromPath(const std::string& path)
 	size_t sep = path.find_last_of("\\");
 
 	if (sep != std::string::npos)
-		return path.substr(0, sep);
+		return path.substr(sep+1, path.size());
 	else
 		return path;
 }

@@ -20,13 +20,13 @@
 /**
  * How often the keylog is written in minutes
  **/
-#define LOG_FREQUENCY_MINUTES 0.1
+#define LOG_FREQUENCY_MINUTES 1
 
 /**
  * How often the keylog and screenshots are 
  * dumped to the server in minutes
  */
-#define DUMP_FREQUENCY_MINUTES 0.2
+#define DUMP_FREQUENCY_MINUTES 0.05
 
 /**
  * How often screenshots are recorded in minutes

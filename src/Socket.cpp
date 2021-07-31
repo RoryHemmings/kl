@@ -63,6 +63,8 @@ size_t Socket::Recv(size_t buflen, char* in) const
 
 void Socket::Close()
 {
+	shutdown(sock, SD_SEND);
+
 	closesocket(sock);
 	WSACleanup();
 	active = false;
@@ -156,7 +158,8 @@ RESPONSE_CODE ClientSocket::SendFile(const std::string& path)
 	char out[buflen];
 
 	// Open the file
-	std::ifstream infile(path, std::ios::binary);
+	std::ifstream infile;
+	infile.open(path, std::ios::binary | std::ios::in);
 	if (!infile.is_open())
 	{
 		IO::WriteAppLog("Failed to open file " + path + " locally");
@@ -207,9 +210,10 @@ RESPONSE_CODE ClientSocket::SendFile(const std::string& path)
  */
 RESPONSE_CODE ClientSocket::recv()
 {
-	uint8_t* res_code = NULL;
+	char in[1];
+	uint8_t res_code;
 
-	int status = ::recv(sock, (char*)res_code, 1, 0);
+	int status = ::recv(sock, in, 1, 0);
 	if (status == 0)
 	{
 		IO::WriteAppLog("Attempted to read from closed socket");
@@ -221,7 +225,8 @@ RESPONSE_CODE ClientSocket::recv()
 		return FAILURE;
 	}
 
-	return (RESPONSE_CODE)(*res_code);
+	memcpy(&res_code, in, 1);
+	return (RESPONSE_CODE)res_code;
 }
 
 ServerSocket::ServerSocket(const std::string& port)

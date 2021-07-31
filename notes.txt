@@ -47,6 +47,7 @@ Everything
 	add encrpytion
 
 Keylogging
+	update logging scheme
 
 Screenshots
 	take screenshot
@@ -57,6 +58,7 @@ Screenshots
 Dumping
 	fill in file transfer algorithm
 	delete files after transfer
+	implement kill switch
 
 
 IMPORTANT TODO

