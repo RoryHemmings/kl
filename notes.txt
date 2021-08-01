@@ -50,13 +50,10 @@ Keylogging
 	update logging scheme
 
 Screenshots
-	take screenshot
-	compress into file
-	name file after timestamp
 	encrpyt file
 
 Dumping
-	fill in file transfer algorithm
+	dump to folder
 	delete files after transfer
 	implement kill switch
 

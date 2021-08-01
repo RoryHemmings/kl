@@ -12,16 +12,16 @@ public:
 	/**
 	 * Automatically takes screenshot upon construction
 	 */
-	Screenshot();
+	Screenshot(const std::string& path);
 
 	/**
 	 * Compresses, encrypts, and saves screenshot to
 	 * outPath
 	 */
-	void Save(const std::string& outPath) const;
+	bool Process() const;
 
 private:
-	// some way of storing the data
+	std::string path;
 
 	/**
 	 * Compresses internal data into a jpeg image

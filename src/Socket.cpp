@@ -63,7 +63,7 @@ size_t Socket::Recv(size_t buflen, char* in) const
 
 void Socket::Close()
 {
-	shutdown(sock, SD_SEND);
+	shutdown(sock, SD_BOTH);
 
 	closesocket(sock);
 	WSACleanup();
