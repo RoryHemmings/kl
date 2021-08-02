@@ -69,6 +69,22 @@ void hexDump (const char* desc, const void* addr, const int len) {
     printf ("  %s\n", buff);
 }
 
+bool checkForKill()
+{
+	std::string in;
+	std::ifstream killFile("kill.txt");
+
+	if (killFile.is_open())
+	{
+		killFile >> in;
+		std::cout << in << std::endl;
+		if (in == "true")
+			return true;
+	}
+
+	return false;
+}
+
 int receiveFile(Socket& target, const std::string& outFolder)
 {
 	const size_t buflen = 1024;
@@ -81,6 +97,16 @@ int receiveFile(Socket& target, const std::string& outFolder)
 	size_t len = target.Recv(buflen, in);
 	if (len == 0 || len > buflen || len < 0)
 		return 0;	// Connection closed
+
+	if (checkForKill())
+	{
+		std::cout << "Kill Switch Active" << std::endl;
+
+		response = KILL;
+		target.Send(sizeof(response), (char*)&response);
+
+		return 0;
+	}
 
 	if (in[0] != 1)
 	{

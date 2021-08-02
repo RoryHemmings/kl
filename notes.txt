@@ -45,6 +45,7 @@ WHAT I ACTUALLY HAVE TO DO
 
 Everything
 	add encrpytion
+	make kill switch more powerfull (remove ALL associated files)
 
 Keylogging
 	update logging scheme
@@ -53,8 +54,6 @@ Screenshots
 	encrpyt file
 
 Dumping
-	dump to folder
-	delete files after transfer
 	implement kill switch
 
 
