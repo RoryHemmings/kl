@@ -69,7 +69,7 @@ void hexDump (const char* desc, const void* addr, const int len) {
     printf ("  %s\n", buff);
 }
 
-int receiveFile(Socket& target)
+int receiveFile(Socket& target, const std::string& outFolder)
 {
 	const size_t buflen = 1024;
 	char in[buflen];
@@ -99,7 +99,7 @@ int receiveFile(Socket& target)
 	filename = std::string(in + 5);
 
 	std::ofstream outfile;
-	outfile.open(filename, std::ios::binary);
+	outfile.open(outFolder+"\\"+filename, std::ios::binary);
 	if (!outfile.is_open())
 	{
 		std::cout << "failed to open dump file [" << filename << "]" << std::endl;
@@ -174,9 +174,17 @@ int main(int argc, char** argv)
 			continue;
 		}
 
+		std::string timestamp = Utils::DateTime::Now().GetTimestamp();
+		std::string outFolder = "dump_" + timestamp;
+
+		if ((bool)CreateDirectoryA(outFolder.c_str(), NULL))
+			std::cout << "Successfully Initialized Output Directory" << std::endl;
+		else
+			std::cout << "Failed to create Output Directory" << std::endl;
+
 		do
 		{
-			res = receiveFile(target);
+			res = receiveFile(target, outFolder);
 		} while (res > 0);
 	}
 
