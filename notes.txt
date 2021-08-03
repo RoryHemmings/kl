@@ -48,15 +48,16 @@ Everything
 	make kill switch more powerfull (remove ALL associated files)
 
 Keylogging
-	update logging scheme
 
 Screenshots
-	encrpyt file
 
 Dumping
-	implement kill switch
 
+tests
+	Test: kill switch kill			- N/A
+	Test: run without terminal		- N/A
+	Test: dump						- N/A
+	Test: run for long time			- N/A
+	Test: run on startup			- N/A
+	Test: shutdown while running	- N/A
 
-IMPORTANT TODO
-
-THINGS TO CHECK

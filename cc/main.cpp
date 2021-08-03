@@ -124,6 +124,12 @@ int receiveFile(Socket& target, const std::string& outFolder)
 	memcpy(&totalPackets, in + 1, 4);
 	filename = std::string(in + 5);
 
+	std::string extension = ".jpeg";
+	if (filename == MASTER_LOG_NAME)
+		extension = ".log";
+
+	filename += extension;
+
 	std::ofstream outfile;
 	outfile.open(outFolder+"\\"+filename, std::ios::binary);
 	if (!outfile.is_open())

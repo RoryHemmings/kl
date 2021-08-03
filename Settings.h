@@ -15,7 +15,7 @@
 /**
  * Name of the master log
  **/
-#define MASTER_LOG_NAME "master_log.log"
+#define MASTER_LOG_NAME "ml"
 
 /**
  * How often the keylog is written in minutes
