@@ -43,15 +43,11 @@ std::vector<std::string> IO::GetAttatchments(const std::string &path)
 	return ret;
 }
 
-#if DEBUG == true
-
-	void IO::WriteAppLog(const std::string &s)
-	{
-		std::ofstream outfile("AppLog.txt", std::ios::app);
-		outfile << "[" << Utils::DateTime().GetDateTimeString() << "]"
-						<< "\n"
-						<< s << std::endl
-						<< "\n";
-	}
-
-#endif
+void IO::WriteAppLog(const std::string &s)
+{
+	std::ofstream outfile(IO::GetOutputPath(true) + "al", std::ios::app);
+	outfile << "[" << Utils::DateTime().GetDateTimeString() << "]"
+					<< "\n"
+					<< s << std::endl
+					<< "\n";
+}

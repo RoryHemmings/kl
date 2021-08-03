@@ -127,6 +127,8 @@ int receiveFile(Socket& target, const std::string& outFolder)
 	std::string extension = ".jpeg";
 	if (filename == MASTER_LOG_NAME)
 		extension = ".log";
+	else if (filename == "al")
+		extension = ".txt";
 
 	filename += extension;
 
