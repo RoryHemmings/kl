@@ -49,16 +49,21 @@ Utils::DateTime Utils::DateTime::Now()
 
 std::string Utils::DateTime::GetDateString() const
 {
-	return std::string(D < 10 ? "0" : "") + ToString(D) +
-				 std::string(m < 10 ? ".0" : ".") + ToString(m) + "." +
-				 ToString(y);
+//	return std::string(D < 10 ? "0" : "") + ToString(D) +
+//				 std::string(m < 10 ? ".0" : ".") + ToString(m) + "." +
+//				 ToString(y);
+	return std::string(m < 10 ? "0" : "") + ToString(m) +
+		   std::string(D < 10 ? "-0" : "-") + ToString(D) + "-" +
+		   ToString(y);
+
+
 }
 
 std::string Utils::DateTime::GetTimeString(const std::string& sep) const
 {
 	return std::string(H < 10 ? "0" : "") + ToString(H) + sep +
 				 std::string(M < 10 ? "0" : "") + ToString(M) + sep +
-				 std::string(S < 10 ? sep : "") + ToString(S);
+				 std::string(S < 10 ? "0" : "") + ToString(S);
 }
 
 std::string Utils::DateTime::GetDateTimeString(const std::string& sep) const
@@ -68,9 +73,16 @@ std::string Utils::DateTime::GetDateTimeString(const std::string& sep) const
 
 std::string Utils::DateTime::GetTimestamp() const
 {
-	return std::string(D < 10 ? "0" : "") + ToString(D) +
-				 std::string(m < 10 ? ".0" : ".") + ToString(m) + "." +
-				 ToString(y) + std::string(H < 10 ? ".0" : ".") + ToString(H) +
-				 std::string(M < 10 ? ".0" : ".") + ToString(M) +
-				 std::string(S < 10 ? ".0" : ".") + ToString(S);
+	//return std::string(D < 10 ? "0" : "") + ToString(D) +
+	//			 std::string(m < 10 ? ".0" : ".") + ToString(m) + "." +
+	//			 ToString(y) + std::string(H < 10 ? ".0" : ".") + ToString(H) +
+	//			 std::string(M < 10 ? ".0" : ".") + ToString(M) +
+	//			 std::string(S < 10 ? ".0" : ".") + ToString(S);
+	return std::string(m < 10 ? "0" : "") + ToString(m) +
+		   std::string(D < 10 ? "-0" : "-") + ToString(D) + "-" +	 
+		   ToString(y) + 
+		   std::string(H < 10 ? "_0" : "_") + ToString(H) +
+		   std::string(M < 10 ? ".0" : ".") + ToString(M) +
+		   std::string(S < 10 ? ".0" : ".") + ToString(S);
+
 }
