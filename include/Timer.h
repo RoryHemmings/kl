@@ -22,8 +22,9 @@ public:
 	 * every "interval" often 
 	 * 
 	 * Runs asynchronously if true is passed as arg
+	 * Runs without waiting, on startup if runOnStartup is true
 	 **/
-	void Start(bool async=true);
+	void Start(bool async=true, bool runOnStartup=false);
 	void Stop();
 
 	/**
@@ -53,20 +54,28 @@ private:
 	// Times left for funct to be called
 	long repeatsLeft = -1L;
 
+	// Whether to sleep and then run, or run and then sleep
+	bool reverse = false;
+
 	// How often funct is called in milliseconds
 	std::chrono::milliseconds interval = std::chrono::milliseconds(0);
 
 	// Function that is called by timer
 	std::function<void(void)> funct = nullptr;
 
+	// Determines how to run the callback function
+	void controlledRun();
+
 	/**
 	 * Waits until interval is reached and then runs
 	 * funct. This repeats until repeatCount becomes 0
+	 * RunAndSleep does the same thing but in reverse order
 	 **/
-	void SleepAndRun();
+	void sleepAndRun();
+	void runAndSleep();
 
 	// Function called when thread is run
-	void ThreadCallback();
+	void threadCallback();
 };
 
 #endif

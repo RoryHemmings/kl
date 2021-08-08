@@ -63,20 +63,24 @@ size_t Socket::Recv(size_t buflen, char* in) const
 
 void Socket::Close()
 {
-	shutdown(sock, SD_BOTH);
+	if (active)
+		shutdown(sock, SD_BOTH);
 
 	closesocket(sock);
-	WSACleanup();
 	active = false;
 }
 
 ClientSocket::ClientSocket(const std::string& adress, int port)
+	: adress(adress)
+	, port(port)
+{ }
+
+void ClientSocket::Connect()
 {
 	// Initialize Socket
 	if ((sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET)
 	{
 		IO::WriteAppLog("Failed to create socket. code: " + WSAGetLastError());
-		WSACleanup();
 		return;
 	}
 
@@ -89,7 +93,6 @@ ClientSocket::ClientSocket(const std::string& adress, int port)
 	if (connect(sock, (SOCKADDR*)&addr_in, sizeof(addr_in)) == SOCKET_ERROR)
 	{
 		IO::WriteAppLog("Failed to connect to server");
-		WSACleanup();
 		Close();
 		return;
 	}

@@ -66,10 +66,15 @@ class ClientSocket : public Socket
 
 public:
 	/**
-	 * Initializes winsock, creates socket, and attempts
-	 * to connect to server at adress on port
+	 * Initializes winsock
 	 */
 	ClientSocket(const std::string& adress, int port);
+
+	/**
+	 * Creates socket and
+	 * attempts to connect to server at adress on port
+	 */
+	void Connect();
 
 	/**
 	 * Sends data using internal socket
@@ -82,6 +87,9 @@ public:
 
 
 private:
+	std::string adress;
+	int port;
+
 	RESPONSE_CODE recv();
 
 };

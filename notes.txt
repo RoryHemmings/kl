@@ -52,6 +52,17 @@ Keylogging
 Screenshots
 
 Dumping
+	Dump upon exectution
+	Dump more often potentially
+	Figure out why there seems to be a limit on the amount of files that can be dumped
+	Put keylogs at the top of the dump list
+	Update download screen
+	Modify port for tests
+
+Todo for release
+	Modify port back
+	Switch to release
+	Switch back to windows under linker/system
 
 tests
 	Test: kill switch kill			- N/A

